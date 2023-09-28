@@ -14,7 +14,6 @@ const Loginpage = () => {
 		e.preventDefault();
 		const form = e.target;
 		const user = form.username.value;
-		console.log(user);
 
 		signin(user, () => navigate(fromPage, { replace: true }));
 	};

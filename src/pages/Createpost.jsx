@@ -9,9 +9,9 @@ const Createpost = () => {
 	return (
 		<div>
 			<h1>Create a post</h1>
-			<button onClick={() => signout(() => navigate("/", { replace: true }))}>
+			{/* <button onClick={() => signout(() => navigate("/", { replace: true }))}>
 				Log Out
-			</button>
+			</button> */}
 		</div>
 	);
 };
