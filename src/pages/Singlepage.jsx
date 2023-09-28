@@ -14,7 +14,6 @@ const Singlepage = () => {
 			.then((data) => setPost(data));
 	}, []);
 
-	console.log(post);
 	return (
 		<div>
 			<button onClick={goBack}>Go Back</button>
