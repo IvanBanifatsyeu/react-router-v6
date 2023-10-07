@@ -5,7 +5,6 @@ const CustomLink = ({ children, to, ...props }) => {
 		path: to,
 		end: to.length === 1,
 	});
-	console.log(match);
 	return (
 		<Link
 			to={to}

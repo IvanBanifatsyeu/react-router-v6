@@ -1,32 +1,80 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Suspense } from "react";
+import {
+	useLoaderData,
+	useNavigate,
+	Link,
+	Await,
+	useAsyncValue,
+} from "react-router-dom";
 
-const Singlepage = () => {
-	const { id } = useParams();
-	const navigate = useNavigate();
-	const [post, setPost] = useState(null);
-	const goBack = () => navigate(-1);
-	const goHome = () => navigate("/", { replace: true });
+const Post = () => {
+	const post = useAsyncValue();
+	return (
+		<>
+			<h1>{post.title}</h1>
+			<p>{post.body}</p>
+		</>
+	);
+};
 
-	useEffect(() => {
-		fetch(`https://jsonplaceholder.typicode.com/posts/${id}`)
-			.then((res) => res.json())
-			.then((data) => setPost(data));
-	}, []);
+const Comments = () => {
+	const comments = useAsyncValue();
 
 	return (
 		<div>
-			<button onClick={goBack}>Go Back</button>
-			{/* Bad approach */}
-			<button onClick={goHome}>Go Home</button>
-			{post && (
+			<h2>Comments</h2>
+			{comments.map((comment) => (
 				<>
-					<h1>{post.title}</h1>
-					<p>{post.body}</p>
+					<h3>{comment.email}</h3>
+					<h4>{comment.name}</h4>
+					<p>{comment.body}</p>
 				</>
-			)}
+			))}
 		</div>
 	);
 };
 
+const Singlepage = () => {
+	const navigate = useNavigate();
+	const goBack = () => navigate(-1);
+	const { post, id, comments } = useLoaderData();
+
+	return (
+		<div>
+			<button onClick={goBack}>Go Back</button>
+			<Suspense fallback={<h2>Loading post...</h2>}>
+				<Await resolve={post}>
+					<Post />
+				</Await>
+			</Suspense>
+			<Suspense fallback={<h2>Loading comments...</h2>}>
+				<Await resolve={comments}>
+					<Comments />
+				</Await>
+			</Suspense>
+
+			<Link to={`/posts/${id}/edit`}>Edit this post with ID = {id}</Link>
+		</div>
+	);
+};
+
+async function getPostById(id) {
+	const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`);
+	return res.json();
+}
+
+async function getCommentsById(id) {
+	const res = await fetch(
+		`https://jsonplaceholder.typicode.com/posts/${id}/comments`
+	);
+	return res.json();
+}
+
+const postLoader = async ({ params }) => {
+	const id = params.id;
+
+	return { post: await getPostById(id), id, comments: getCommentsById(id) };
+};
+
 export default Singlepage;
+export { postLoader };
