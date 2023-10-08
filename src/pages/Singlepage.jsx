@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Fragment, Suspense } from "react";
 import {
 	useLoaderData,
 	useNavigate,
@@ -23,12 +23,12 @@ const Comments = () => {
 	return (
 		<div>
 			<h2>Comments</h2>
-			{comments.map((comment) => (
-				<>
+			{comments.map((comment, ind) => (
+				<Fragment key={ind}>
 					<h3>{comment.email}</h3>
 					<h4>{comment.name}</h4>
 					<p>{comment.body}</p>
-				</>
+				</Fragment>
 			))}
 		</div>
 	);

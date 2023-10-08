@@ -65,3 +65,14 @@ main a:hover {
 ul {
 	margin-left: 30px;
 }
+
+.formm {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.formm * {
+	margin: 5px;
+}

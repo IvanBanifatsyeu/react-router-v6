@@ -12,10 +12,10 @@ import Notfoundpage from "./pages/Notfoundpage";
 import Layout from "./components/Layout";
 import Singlepage, { postLoader } from "./pages/Singlepage";
 import Loginpage from "./pages/Loginpage";
-import Createpost from "./pages/Createpost";
+import Createpost, { createPostAction } from "./pages/Createpost";
 import RequireAuth from "./hoc/RequireAuth";
 import { AuthProvider } from "./hoc/AuthProvider";
-import Editpost from "./pages/Editpost";
+import Editpost, { updatePostAction } from "./pages/Editpost";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -30,7 +30,16 @@ const router = createBrowserRouter(
 			<Route path="posts/:id" element={<Singlepage />} loader={postLoader} />
 			<Route path="*" element={<Notfoundpage />} />
 			<Route path="login" element={<Loginpage />} />
-			<Route path="posts/:id/edit" element={<Editpost />} />
+			<Route
+				path="posts/:id/edit"
+				element={
+					<RequireAuth>
+						<Editpost />
+					</RequireAuth>
+				}
+				loader={postLoader}
+				action={updatePostAction}
+			/>
 			<Route
 				path="post/new"
 				element={
@@ -38,6 +47,7 @@ const router = createBrowserRouter(
 						<Createpost />
 					</RequireAuth>
 				}
+				action={createPostAction}
 			/>
 		</Route>
 	)
